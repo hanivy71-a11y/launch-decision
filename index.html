@@ -798,6 +798,23 @@
   </section>
 
   <section class="card">
+    <h2>입금 계좌</h2>
+    <div class="field">
+      <label class="label-text">은행</label>
+      <input type="text" id="bankName" placeholder="예: 국민은행">
+    </div>
+    <div class="field">
+      <label class="label-text">예금주</label>
+      <input type="text" id="bankHolder" placeholder="예금주 이름">
+    </div>
+    <div class="field">
+      <label class="label-text">계좌번호</label>
+      <input type="text" inputmode="numeric" id="bankAccount" placeholder="예: 123-456-789012">
+    </div>
+    <p class="split-hint">입력하면 이 기기에 자동 저장되고, 정산 요약을 복사할 때 함께 복사돼요.</p>
+  </section>
+
+  <section class="card">
     <h2 id="summaryHeading">정산 요약</h2>
     <div id="summaryList"><p class="empty-state">내역이 쌓이면 인당 정산 금액을 보여드려요</p></div>
     <div class="summary-total" id="summaryTotal" style="display:none;">
@@ -1517,16 +1534,49 @@
       const lines = [monthLabelOf(currentMonthKey) + " 점심값 정산"];
       sortedNames.forEach(name => lines.push(name + " " + won(totals[name])));
       lines.push("합계 " + won(grandTotal));
-      const text = lines.join("\n");
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(text).then(
-          () => showToast("정산 요약을 복사했어요"),
-          () => showToast("복사에 실패했어요. 길게 눌러 직접 복사해 주세요")
-        );
-      } else {
-        showToast("이 브라우저에서는 자동 복사를 지원하지 않아요");
-      }
+      const bank = bankText();
+      if(bank) lines.push(bank);
+      copyText(lines.join("\n"), "정산 요약을 복사했어요");
     };
+  }
+
+  // ---- 입금 계좌 정보 (이 기기에 저장) ----
+  const BANK_KEY = "lunch-settlement:bank";
+  function readBankInputs(){
+    return {
+      bank: document.getElementById("bankName").value.trim(),
+      holder: document.getElementById("bankHolder").value.trim(),
+      account: document.getElementById("bankAccount").value.trim()
+    };
+  }
+  function loadBank(){
+    try{
+      const raw = localStorage.getItem(BANK_KEY);
+      const b = raw ? JSON.parse(raw) : {};
+      document.getElementById("bankName").value = b.bank || "";
+      document.getElementById("bankHolder").value = b.holder || "";
+      document.getElementById("bankAccount").value = b.account || "";
+    } catch(e){ /* ignore */ }
+  }
+  function persistBank(){
+    try{ localStorage.setItem(BANK_KEY, JSON.stringify(readBankInputs())); } catch(e){ /* ignore */ }
+  }
+  // 복사용 한 줄 텍스트. 입력된 게 없으면 빈 문자열.
+  function bankText(){
+    const { bank, holder, account } = readBankInputs();
+    const main = [bank, account].filter(Boolean).join(" ");
+    if(!main && !holder) return "";
+    return "입금계좌: " + main + (holder ? " (예금주 " + holder + ")" : "");
+  }
+  function copyText(text, okMsg){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(
+        () => showToast(okMsg),
+        () => showToast("복사에 실패했어요. 길게 눌러 직접 복사해 주세요")
+      );
+    } else {
+      showToast("이 브라우저에서는 자동 복사를 지원하지 않아요");
+    }
   }
 
   // ---- 인원별 내역 ----
@@ -1591,15 +1641,9 @@
         lines.push(parseInt(m,10) + "월 " + parseInt(d,10) + "일 " + (r.restaurant || "식당 미입력") + " " + won(r.amount));
       });
       lines.push("합계 " + won(total));
-      const text = lines.join("\n");
-      if(navigator.clipboard && navigator.clipboard.writeText){
-        navigator.clipboard.writeText(text).then(
-          () => showToast(name + " 내역을 복사했어요"),
-          () => showToast("복사에 실패했어요. 길게 눌러 직접 복사해 주세요")
-        );
-      } else {
-        showToast("이 브라우저에서는 자동 복사를 지원하지 않아요");
-      }
+      const bank = bankText();
+      if(bank) lines.push(bank);
+      copyText(lines.join("\n"), name + " 내역을 복사했어요");
     };
   }
   function resetForm(){
@@ -1731,6 +1775,11 @@
     document.getElementById("cancelEditBtn").addEventListener("click", () => resetForm());
     document.getElementById("cancelEditBtn2").addEventListener("click", () => resetForm());
     document.getElementById("personSelect").addEventListener("change", renderPersonList);
+
+    loadBank();
+    ["bankName","bankHolder","bankAccount"].forEach(id => {
+      document.getElementById(id).addEventListener("input", persistBank);
+    });
 
     document.getElementById("deleteMonthBtn").addEventListener("click", async () => {
       if(entries.length === 0){ showToast("삭제할 내역이 없어요"); return; }
