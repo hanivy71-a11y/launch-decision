@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -624,33 +625,6 @@
     font-size: 12px;
     color: var(--muted);
   }
-  .map-box{ margin-top: 14px; }
-  .naver-map{
-    width: 100%;
-    height: 250px;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-  }
-  .map-note{
-    font-size: 11.5px;
-    color: var(--muted);
-    text-align: center;
-    margin: 8px 0 0;
-  }
-  .nm-pin{
-    display: inline-block;
-    transform: translate(-50%, -100%);
-    padding: 4px 9px;
-    border-radius: 12px;
-    font-size: 11.5px;
-    font-weight: 700;
-    color: #fff;
-    white-space: nowrap;
-    box-shadow: 0 1px 4px rgba(0,0,0,.35);
-  }
-  .nm-pin.nm-hq{ background: #E0417F; }
-  .nm-pin.nm-pick{ background: #C97B2E; }
   .mini-map{
     display:block;
     width: 100%;
@@ -670,6 +644,30 @@
   }
   .mini-map .mm-hq{
     fill: var(--primary-text);
+  }
+
+  .near-btn{
+    display:block; width:100%; margin-top:10px; padding:12px;
+    background: var(--surface); color: var(--primary);
+    border: 2px solid var(--primary); border-radius: 12px;
+    font-size: 15px; font-weight: 800; cursor: pointer;
+  }
+  .near-panel{ margin-top: 12px; }
+  .near-panel.hidden{ display:none; }
+  .near-head{ font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+  .near-row{
+    display:flex; align-items:center; gap:8px; padding: 9px 4px;
+    border-bottom: 1px solid var(--border); font-size: 14px;
+  }
+  .near-rank{ width:22px; text-align:center; font-weight:800; color: var(--primary); }
+  .near-main{ flex:1; min-width:0; }
+  .near-name{ font-weight:700; }
+  .near-sub{ font-size:12px; color: var(--muted); }
+  .near-link{ font-size:12px; font-weight:700; color: var(--primary); text-decoration:none; white-space:nowrap; }
+  .near-more{
+    display:block; text-align:center; margin-top:12px; padding:11px;
+    border-radius:10px; background:#03c75a; color:#fff; font-weight:800;
+    font-size:14px; text-decoration:none;
   }
   .manage-toggle{
     display:block;
@@ -734,6 +732,7 @@
     cursor:pointer;
   }
   .manage-row .remove-x:hover{ background: #FBDCE9; color: var(--danger); }
+  .btn-danger-outline{
     width: 100%;
     margin-top: 12px;
     padding: 11px;
@@ -747,7 +746,7 @@
   }
   .btn-danger-outline:hover{ border-color: var(--danger); color: var(--danger); }
 </style>
-</head>
+<!-- near-restaurants v1 --></head>
 <body>
 <div class="app">
   <header>
@@ -770,6 +769,9 @@
       <div class="filter-row" id="filterRow"></div>
       <button class="random-btn" id="randomPickBtn">랜덤으로 골라주세요</button>
       <div class="random-result" id="randomResult"></div>
+
+      <button class="near-btn" id="nearBtn">🍽 주위 맛집 20곳 보기</button>
+      <div class="near-panel hidden" id="nearPanel"></div>
 
       <button class="manage-toggle" id="manageToggleBtn">식당 목록 관리</button>
       <div class="manage-panel hidden" id="managePanel">
@@ -1093,60 +1095,6 @@
     if(m < 950) return "약 " + (Math.round(m/10)*10) + "m";
     return "약 " + (m/1000).toFixed(1) + "km";
   }
-  // ---- 네이버 지도 (Web Dynamic Map) ----
-  // 이 파일은 네이버 클라우드 플랫폼 콘솔에 "Web 서비스 URL"로 등록한 주소에서 열어야 지도가 나와요.
-  const NAVER_KEY_ID = "6m0xkgtfty";
-  let naverReady = false;
-  let naverFailed = false;
-  let currentPick = null;
-
-  // 인증 실패(미등록 주소 등) 시 네이버 SDK가 호출하는 전역 함수
-  window.navermap_authFailure = function(){
-    naverFailed = true;
-    naverReady = false;
-    swapToFallbackMap("지도 인증에 실패해 간단 방위도로 보여드려요. (콘솔의 Web 서비스 URL 등록을 확인해 주세요)");
-  };
-
-  function loadNaverMaps(){
-    const sc = document.createElement("script");
-    sc.src = "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=" + encodeURIComponent(NAVER_KEY_ID);
-    sc.async = true;
-    sc.onload = function(){ naverReady = !!(window.naver && window.naver.maps); if(!naverReady) naverFailed = true; };
-    sc.onerror = function(){ naverFailed = true; naverReady = false; };
-    document.head.appendChild(sc);
-  }
-
-  function swapToFallbackMap(noteText){
-    const box = document.getElementById("mapBox");
-    if(!box || !currentPick) return;
-    box.innerHTML = buildMiniMap(currentPick) + '<p class="map-note">' + escapeHtml(noteText) + '</p>';
-  }
-
-  function renderNaverMap(pick){
-    try{
-      const hq = new naver.maps.LatLng(HQ.lat, HQ.lng);
-      const pos = new naver.maps.LatLng(pick.lat, pick.lng);
-      const map = new naver.maps.Map("naverMap", {
-        center: pos, zoom: 16,
-        zoomControl: true,
-        zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT }
-      });
-      new naver.maps.Marker({
-        position: hq, map: map,
-        icon: { content: '<div class="nm-pin nm-hq">정부청사역</div>' }
-      });
-      new naver.maps.Marker({
-        position: pos, map: map,
-        icon: { content: '<div class="nm-pin nm-pick">' + escapeHtml(pick.name) + '</div>' }
-      });
-      const bounds = new naver.maps.LatLngBounds(hq, hq);
-      bounds.extend(pos);
-      map.fitBounds(bounds, { top: 50, right: 40, bottom: 30, left: 40 });
-    } catch(e){
-      swapToFallbackMap("지도를 불러오지 못해 간단 방위도로 보여드려요.");
-    }
-  }
-
   // 정부청사역을 중심, 뽑힌 식당을 바깥쪽 점으로 표시하는 간단한 방위 지도(SVG)
   function buildMiniMap(pick){
     if(pick.lat == null || pick.lng == null) return "";
@@ -1199,6 +1147,31 @@
       opt.value = c; opt.textContent = CAT_LABELS[c];
       sel.appendChild(opt);
     });
+  }
+
+
+  function renderNearby(){
+    const panel = document.getElementById("nearPanel");
+    const rows = getDiscoverPool()
+      .filter(r => typeof r.lat === "number" && r.cat !== "cafe")
+      .map(r => ({ r, d: distanceMeters(HQ.lat, HQ.lng, r.lat, r.lng) }))
+      .sort((a,b) => a.d - b.d)
+      .slice(0, 20);
+    if(rows.length === 0){
+      panel.innerHTML = '<p class="empty-state">위치 정보가 있는 식당이 없어요</p>';
+      return;
+    }
+    panel.innerHTML =
+      '<div class="near-head">정부청사역에서 가까운 순 20곳 · 이름을 눌러 네이버 지도로 확인하세요</div>' +
+      rows.map((x, i) =>
+        '<div class="near-row">' +
+          '<span class="near-rank">' + (i+1) + '</span>' +
+          '<div class="near-main"><div class="near-name">' + escapeHtml(x.r.name) + '</div>' +
+          '<div class="near-sub">' + (CAT_LABELS[x.r.cat] || "") + (x.r.note ? " · " + escapeHtml(x.r.note) : "") + ' · ' + formatDistance(x.d) + '</div></div>' +
+          '<a class="near-link" target="_blank" rel="noopener" href="' + mapSearchUrl(x.r.name) + '">지도 ›</a>' +
+        '</div>'
+      ).join("") +
+      '<a class="near-more" target="_blank" rel="noopener" href="https://search.naver.com/search.naver?query=' + encodeURIComponent("정부청사역 맛집") + '">네이버에서 "정부청사역 맛집" 더 찾아보기</a>';
   }
 
   function renderManageList(){
@@ -1254,23 +1227,13 @@
     }
     metaLine += '<span class="r-meta-item">☎ ' + (pick.phone ? escapeHtml(pick.phone) : '전화번호 정보 없음') + '</span>';
 
-    currentPick = pick;
-    const hasCoord = (pick.lat != null && pick.lng != null);
-    const useNaver = hasCoord && naverReady && !naverFailed;
-    let mapHtml = "";
-    if(hasCoord){
-      mapHtml = '<div class="map-box" id="mapBox">' +
-        (useNaver ? '<div id="naverMap" class="naver-map"></div>' : buildMiniMap(pick)) +
-        '</div>';
-    }
     resultBox.innerHTML =
       '<a class="restaurant-card" href="' + mapSearchUrl(pick.name) + '" target="_blank" rel="noopener">' +
         '<span class="r-info"><span class="r-name">' + escapeHtml(pick.name) + '</span><span class="r-cat">' + catLabel + (pick.note ? ' · ' + escapeHtml(pick.note) : '') + '</span></span>' +
         '<span class="r-arrow">↗</span>' +
       '</a>' +
       '<div class="r-meta">' + metaLine + '</div>' +
-      mapHtml;
-    if(useNaver) renderNaverMap(pick);
+      buildMiniMap(pick);
     showToast(pick.name + " 어때요?");
   }
 
@@ -1897,7 +1860,6 @@
   }
 
   async function init(){
-    loadNaverMaps();
     migrateRename("이윤정", "김윤정");
     loadVisited();
     loadCustom();
@@ -1907,6 +1869,13 @@
     switchTab("discover");
     document.querySelectorAll(".tab-btn").forEach(btn => {
       btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+    });
+    document.getElementById("nearBtn").addEventListener("click", () => {
+      const panel = document.getElementById("nearPanel");
+      const show = panel.classList.contains("hidden");
+      panel.classList.toggle("hidden", !show);
+      document.getElementById("nearBtn").textContent = show ? "🍽 주위 맛집 닫기" : "🍽 주위 맛집 20곳 보기";
+      if(show) renderNearby();
     });
     document.getElementById("randomPickBtn").addEventListener("click", pickRandomRestaurant);
 
@@ -2030,3 +1999,5 @@
 </script>
 </body>
 </html>
+
+</body></html>
