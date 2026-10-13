@@ -614,6 +614,63 @@
     text-align:center;
     padding: 18px 0;
   }
+  .r-meta{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    margin: 10px 2px 0;
+  }
+  .r-meta-item{
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .map-box{ margin-top: 14px; }
+  .naver-map{
+    width: 100%;
+    height: 250px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .map-note{
+    font-size: 11.5px;
+    color: var(--muted);
+    text-align: center;
+    margin: 8px 0 0;
+  }
+  .nm-pin{
+    display: inline-block;
+    transform: translate(-50%, -100%);
+    padding: 4px 9px;
+    border-radius: 12px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fff;
+    white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(0,0,0,.35);
+  }
+  .nm-pin.nm-hq{ background: #E0417F; }
+  .nm-pin.nm-pick{ background: #C97B2E; }
+  .mini-map{
+    display:block;
+    width: 100%;
+    max-width: 220px;
+    margin: 14px auto 0;
+  }
+  .mini-map .mm-dir{
+    font-size: 9px;
+    fill: var(--muted);
+    font-family: inherit;
+  }
+  .mini-map .mm-label{
+    font-size: 11px;
+    font-weight: 700;
+    fill: var(--ink);
+    font-family: inherit;
+  }
+  .mini-map .mm-hq{
+    fill: var(--primary-text);
+  }
   .manage-toggle{
     display:block;
     margin: 16px auto 0;
@@ -860,66 +917,66 @@
     etc: "기타", visited: "우리 팀이 다녀온 곳"
   };
   const RESTAURANTS = [
-    { name:"촌놈밥상", cat:"korean", note:"백반·덮밥" },
-    { name:"손의손 본점", cat:"korean", note:"낙지볶음" },
-    { name:"상록회관 연탄구이 대전둔산점", cat:"korean", note:"숯불구이·해물" },
-    { name:"금촌 본점", cat:"korean", note:"족발보쌈" },
-    { name:"정든밥", cat:"korean", note:"비빔밥 전문" },
-    { name:"오봉집 대전둔산점", cat:"korean", note:"낙지쌈밥" },
-    { name:"밥한톨", cat:"korean", note:"돌솥밥" },
-    { name:"야야식당", cat:"korean", note:"한식뷔페" },
-    { name:"명가백반뚝배기", cat:"korean", note:"백반" },
-    { name:"짚풍관 대전둔산점", cat:"korean", note:"해물찜·족발" },
-    { name:"쌍둥이수육국밥 선사점", cat:"korean", note:"수육국밥" },
-    { name:"설천순대국밥", cat:"korean", note:"순대국밥" },
-    { name:"원조태평소국밥 둔산점", cat:"korean", note:"소국밥" },
-    { name:"바우네 나주곰탕", cat:"korean", note:"곰탕" },
-    { name:"백그릇국밥 본점", cat:"korean", note:"국밥" },
-    { name:"봉명순대", cat:"korean", note:"순대국" },
-    { name:"쌍둥이수육국밥 둔산로점", cat:"korean", note:"수육국밥" },
-    { name:"서울깍두기 대전시청점", cat:"korean", note:"국밥" },
-    { name:"이탈리안국수", cat:"korean", note:"퓨전 한식·리조또" },
-    { name:"자유대반점", cat:"chinese", note:"짜장면·짬뽕" },
-    { name:"중식명장 이송학", cat:"chinese", note:"짬뽕" },
-    { name:"마천취", cat:"chinese", note:"코스요리" },
-    { name:"동천홍 둔산점", cat:"chinese", note:"짜장면·군만두" },
-    { name:"동춘홍 청사로점", cat:"chinese", note:"중식면" },
-    { name:"스위트베이징", cat:"chinese", note:"중식" },
-    { name:"첨아각", cat:"chinese", note:"수타면" },
-    { name:"멩야산다이메", cat:"japanese", note:"일본가정식" },
-    { name:"연이자카야", cat:"japanese", note:"이자카야·라멘" },
-    { name:"라멘 오오타", cat:"japanese", note:"마제소바" },
-    { name:"그레이토라멘", cat:"japanese", note:"라멘" },
-    { name:"면식당 둔산시청점", cat:"japanese", note:"라멘·돈까스" },
-    { name:"정돈 갤러리아백화점타임월드점", cat:"japanese", note:"돈까스" },
-    { name:"정동 대전둔산점", cat:"japanese", note:"돈까스·우동" },
-    { name:"별달돈까스 카페 별이달이 둔산점", cat:"japanese", note:"돈까스" },
-    { name:"Gacheubi", cat:"japanese", note:"함박돈까스" },
-    { name:"어메이징카츠", cat:"japanese", note:"돈까스" },
-    { name:"백소정 대전둔산점", cat:"japanese", note:"돈까스" },
-    { name:"SOBA&KATSU", cat:"japanese", note:"소바·돈까스" },
-    { name:"현정떡볶이", cat:"bunsik", note:"떡볶이" },
-    { name:"더바스켓 월평선사점", cat:"bunsik", note:"떡볶이·닭강정" },
-    { name:"떡반집", cat:"bunsik", note:"떡볶이·토스트" },
-    { name:"정김밥", cat:"bunsik", note:"김밥" },
-    { name:"빨봉분식 둔산점", cat:"bunsik", note:"떡볶이·김밥" },
-    { name:"Teacher Kim", cat:"bunsik", note:"김밥" },
-    { name:"김피라 대전둔산점", cat:"bunsik", note:"로제떡볶이·김밥" },
-    { name:"김가네 대전청사점", cat:"bunsik", note:"김밥·분식" },
-    { name:"Rolling Pasta 타임월드점", cat:"western", note:"파스타" },
-    { name:"Pieno", cat:"western", note:"스파게티" },
-    { name:"Mad For Garlic", cat:"western", note:"갈릭 이탈리안" },
-    { name:"Hash 해쉬", cat:"western", note:"스테이크·파스타" },
-    { name:"빼레뜨한남 대전둔산점", cat:"western", note:"파스타·포케" },
-    { name:"임대장 대전둔산점", cat:"bbq", note:"삼겹살" },
-    { name:"곱돌이삼겹살", cat:"bbq", note:"삼겹살" },
-    { name:"강남삼겹살", cat:"bbq", note:"삼겹살" },
-    { name:"스타벅스 대전정부청사역점", cat:"cafe", note:"카페" },
-    { name:"Reception", cat:"cafe", note:"카페·디저트" },
-    { name:"Benijeu", cat:"cafe", note:"브런치·스테이크" },
-    { name:"Holy Cross", cat:"cafe", note:"브런치·와플" },
-    { name:"숍비피 SHOPBP", cat:"cafe", note:"카페" },
-    { name:"Omasye", cat:"cafe", note:"브런치" }
+    { name:"태평소국밥", cat:"korean", note:"소국밥", lat:36.3540819, lng:127.3778893, phone:"" },
+    { name:"부산면관 둔산직영점", cat:"korean", note:"한식", lat:36.3537005, lng:127.3821776, phone:"" },
+    { name:"설천순대국밥", cat:"korean", note:"순대국밥", lat:36.3539957, lng:127.3805236, phone:"" },
+    { name:"타향골 따귀탕 둔산본점", cat:"korean", note:"감자탕", lat:36.3549104, lng:127.3773646, phone:"" },
+    { name:"솔밭샤브 둔산점", cat:"korean", note:"샤브샤브", lat:36.3530932, lng:127.3777857, phone:"" },
+    { name:"담온식당", cat:"korean", note:"한식", lat:36.352251, lng:127.3872557, phone:"" },
+    { name:"바다꽃소바 해물칼국수", cat:"korean", note:"칼국수", lat:36.3519079, lng:127.380047, phone:"" },
+    { name:"손의손 본점", cat:"korean", note:"주꾸미볶음", lat:36.3506414, lng:127.3812017, phone:"" },
+    { name:"사리원 본점", cat:"korean", note:"냉면", lat:36.3553562, lng:127.3773137, phone:"" },
+    { name:"담라 둔산본점", cat:"korean", note:"제주음식", lat:36.350608, lng:127.3894944, phone:"" },
+    { name:"사리원면옥 시청점", cat:"korean", note:"냉면", lat:36.3496395, lng:127.3878614, phone:"" },
+    { name:"보끄미 대전점", cat:"korean", note:"주꾸미요리", lat:36.3544843, lng:127.3805899, phone:"" },
+    { name:"보배반점 대전둔산점", cat:"chinese", note:"중식당", lat:36.3500784, lng:127.3893981, phone:"" },
+    { name:"원산시도삭면", cat:"chinese", note:"중식당", lat:36.35081, lng:127.3755366, phone:"" },
+    { name:"짬뽕관 대전둔산점", cat:"chinese", note:"중식당", lat:36.353409, lng:127.3817885, phone:"" },
+    { name:"이비가짬뽕 시청점", cat:"chinese", note:"중식당", lat:36.3503394, lng:127.3878267, phone:"" },
+    { name:"마라공방 대전시청점", cat:"chinese", note:"마라탕", lat:36.3508661, lng:127.3881554, phone:"" },
+    { name:"별달돈까스 대전둔산점", cat:"japanese", note:"돈까스", lat:36.3515878, lng:127.3771612, phone:"" },
+    { name:"몽상 대전둔산본점", cat:"japanese", note:"일식당", lat:36.3532485, lng:127.378116, phone:"" },
+    { name:"정돈 갤러리아백화점 타임월드점", cat:"japanese", note:"돈까스", lat:36.3517005, lng:127.3782419, phone:"" },
+    { name:"면식당 둔산시청점", cat:"japanese", note:"일식당", lat:36.3527334, lng:127.3893902, phone:"" },
+    { name:"멘지 대전둔산점", cat:"japanese", note:"일본식라면", lat:36.3533059, lng:127.3781214, phone:"" },
+    { name:"타츠진 우동", cat:"japanese", note:"일식 우동", lat:36.3547259, lng:127.3781036, phone:"" },
+    { name:"키츠네유부 대전둔산점", cat:"japanese", note:"초밥·롤", lat:36.3508639, lng:127.3881196, phone:"" },
+    { name:"상무초밥 둔산점", cat:"japanese", note:"초밥·롤", lat:36.3546813, lng:127.3776449, phone:"" },
+    { name:"바른초밥 둔산점", cat:"japanese", note:"초밥·롤", lat:36.3492016, lng:127.387843, phone:"" },
+    { name:"재주초밥", cat:"japanese", note:"초밥·롤", lat:36.350008, lng:127.3786679, phone:"" },
+    { name:"하루엔소쿠 대전시청점", cat:"japanese", note:"돈까스", lat:36.3520348, lng:127.3878372, phone:"" },
+    { name:"이태리국시 대전", cat:"western", note:"양식", lat:36.3531348, lng:127.3772877, phone:"" },
+    { name:"미도인 대전 둔산점", cat:"western", note:"양식", lat:36.3540355, lng:127.3773739, phone:"" },
+    { name:"볼로니아 대전둔산점", cat:"western", note:"양식", lat:36.3506809, lng:127.3886639, phone:"" },
+    { name:"떡반집 본점", cat:"bunsik", note:"분식", lat:36.3522508, lng:127.3749865, phone:"" },
+    { name:"샘머리김밥", cat:"bunsik", note:"김밥", lat:36.3619545, lng:127.3913275, phone:"" },
+    { name:"떡볶이농장 대전둔산점", cat:"bunsik", note:"떡볶이", lat:36.3534168, lng:127.3780913, phone:"" },
+    { name:"선비꼬마김밥 둔산직영점", cat:"bunsik", note:"김밥", lat:36.3511578, lng:127.3871358, phone:"" },
+    { name:"톳톳 둔산 본점", cat:"etc", note:"베트남음식", lat:36.3546343, lng:127.3781117, phone:"" },
+    { name:"땀땀 갤러리아백화점 타임월드점", cat:"etc", note:"베트남음식", lat:36.3523123, lng:127.3783183, phone:"" },
+    { name:"미분당 대전둔산점", cat:"etc", note:"베트남음식", lat:36.3552072, lng:127.3782638, phone:"" },
+    { name:"에머이 대전둔산점", cat:"etc", note:"베트남음식", lat:36.3528097, lng:127.3797536, phone:"" },
+    { name:"하노이 베트남 쌀국수 둔산본점", cat:"etc", note:"베트남 쌀국수", lat:36.3521943, lng:127.3875045, phone:"" },
+    { name:"스타벅스 대전정부청사역점", cat:"cafe", note:"카페", lat:36.358046, lng:127.382279, phone:"" },
+    { name:"읍천리382 대전둔산점", cat:"cafe", note:"카페", lat:36.3536929, lng:127.3823527, phone:"" },
+    { name:"모루 둔산본점", cat:"cafe", note:"브런치", lat:36.3494635, lng:127.3781227, phone:"" },
+    { name:"리셉션", cat:"cafe", note:"카페", lat:36.3519016, lng:127.3801933, phone:"" },
+    { name:"하레하레 갤러리아 타임월드점", cat:"cafe", note:"베이커리", lat:36.3517427, lng:127.3781333, phone:"" },
+    { name:"꾸드뱅베이커스하우스", cat:"cafe", note:"베이커리", lat:36.3506475, lng:127.379855, phone:"" },
+    { name:"맛찬들왕소금구이 둔산점", cat:"bbq", note:"소금구이", lat:36.3506741, lng:127.3878247, phone:"" },
+    { name:"육첩반상 대전청사점", cat:"bbq", note:"고기요리", lat:36.3590384, lng:127.3887164, phone:"" },
+    { name:"오백돈 대전본점", cat:"bbq", note:"돼지고기구이", lat:36.3498532, lng:127.3893865, phone:"" },
+    { name:"불타는쪽갈비 대전둔산본점", cat:"bbq", note:"쪽갈비", lat:36.3525597, lng:127.3769957, phone:"" },
+    { name:"고깃리88번지 대전둔산점", cat:"bbq", note:"돼지고기구이", lat:36.3510915, lng:127.3742405, phone:"" },
+    { name:"푸고 둔산점", cat:"bbq", note:"고기요리", lat:36.3529601, lng:127.3777866, phone:"" },
+    { name:"모토이시 둔산점", cat:"bbq", note:"고기요리", lat:36.3505637, lng:127.3764983, phone:"" },
+    { name:"마왕족발 대전둔산점", cat:"bbq", note:"족발", lat:36.3548872, lng:127.378104, phone:"" },
+    { name:"항아리보쌈 둔산점", cat:"bbq", note:"보쌈", lat:36.3525727, lng:127.3745043, phone:"" },
+    { name:"근본있는족발보쌈 둔산시청점", cat:"bbq", note:"족발보쌈", lat:36.3527757, lng:127.3885795, phone:"" },
+    { name:"벽돌곱창 시청본점", cat:"bbq", note:"곱창·막창", lat:36.3508447, lng:127.3882399, phone:"" },
+    { name:"옥계노루 대전 둔산본점", cat:"bbq", note:"곱창·막창", lat:36.3513842, lng:127.3747394, phone:"" },
+    { name:"우화곱창", cat:"bbq", note:"곱창·막창", lat:36.3518156, lng:127.3751273, phone:"" },
+    { name:"연막창 둔산점", cat:"bbq", note:"곱창·막창", lat:36.3493791, lng:127.3887669, phone:"" },
   ];
   const VISITED_KEY = "lunch-settlement:visited";
   const CUSTOM_KEY = "lunch-settlement:custom-restaurants";
@@ -1018,6 +1075,104 @@
     return "https://map.naver.com/v5/search/" + encodeURIComponent(name + " 대전");
   }
 
+  // ---- 정부청사역 기준 거리/방위 계산 ----
+  const HQ = { lat: 36.357442, lng: 127.381145 };
+  function toRad(d){ return d * Math.PI / 180; }
+  function distanceMeters(lat1, lng1, lat2, lng2){
+    const R = 6371000;
+    const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
+    const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  }
+  function bearingDeg(lat1, lng1, lat2, lng2){
+    const y = Math.sin(toRad(lng2-lng1)) * Math.cos(toRad(lat2));
+    const x = Math.cos(toRad(lat1))*Math.sin(toRad(lat2)) - Math.sin(toRad(lat1))*Math.cos(toRad(lat2))*Math.cos(toRad(lng2-lng1));
+    return (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  }
+  function formatDistance(m){
+    if(m < 950) return "약 " + (Math.round(m/10)*10) + "m";
+    return "약 " + (m/1000).toFixed(1) + "km";
+  }
+  // ---- 네이버 지도 (Web Dynamic Map) ----
+  // 이 파일은 네이버 클라우드 플랫폼 콘솔에 "Web 서비스 URL"로 등록한 주소에서 열어야 지도가 나와요.
+  const NAVER_KEY_ID = "6m0xkgtfty";
+  let naverReady = false;
+  let naverFailed = false;
+  let currentPick = null;
+
+  // 인증 실패(미등록 주소 등) 시 네이버 SDK가 호출하는 전역 함수
+  window.navermap_authFailure = function(){
+    naverFailed = true;
+    naverReady = false;
+    swapToFallbackMap("지도 인증에 실패해 간단 방위도로 보여드려요. (콘솔의 Web 서비스 URL 등록을 확인해 주세요)");
+  };
+
+  function loadNaverMaps(){
+    const sc = document.createElement("script");
+    sc.src = "https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=" + encodeURIComponent(NAVER_KEY_ID);
+    sc.async = true;
+    sc.onload = function(){ naverReady = !!(window.naver && window.naver.maps); if(!naverReady) naverFailed = true; };
+    sc.onerror = function(){ naverFailed = true; naverReady = false; };
+    document.head.appendChild(sc);
+  }
+
+  function swapToFallbackMap(noteText){
+    const box = document.getElementById("mapBox");
+    if(!box || !currentPick) return;
+    box.innerHTML = buildMiniMap(currentPick) + '<p class="map-note">' + escapeHtml(noteText) + '</p>';
+  }
+
+  function renderNaverMap(pick){
+    try{
+      const hq = new naver.maps.LatLng(HQ.lat, HQ.lng);
+      const pos = new naver.maps.LatLng(pick.lat, pick.lng);
+      const map = new naver.maps.Map("naverMap", {
+        center: pos, zoom: 16,
+        zoomControl: true,
+        zoomControlOptions: { position: naver.maps.Position.TOP_RIGHT }
+      });
+      new naver.maps.Marker({
+        position: hq, map: map,
+        icon: { content: '<div class="nm-pin nm-hq">정부청사역</div>' }
+      });
+      new naver.maps.Marker({
+        position: pos, map: map,
+        icon: { content: '<div class="nm-pin nm-pick">' + escapeHtml(pick.name) + '</div>' }
+      });
+      const bounds = new naver.maps.LatLngBounds(hq, hq);
+      bounds.extend(pos);
+      map.fitBounds(bounds, { top: 50, right: 40, bottom: 30, left: 40 });
+    } catch(e){
+      swapToFallbackMap("지도를 불러오지 못해 간단 방위도로 보여드려요.");
+    }
+  }
+
+  // 정부청사역을 중심, 뽑힌 식당을 바깥쪽 점으로 표시하는 간단한 방위 지도(SVG)
+  function buildMiniMap(pick){
+    if(pick.lat == null || pick.lng == null) return "";
+    const dist = distanceMeters(HQ.lat, HQ.lng, pick.lat, pick.lng);
+    const brg = bearingDeg(HQ.lat, HQ.lng, pick.lat, pick.lng);
+    const maxR = 85, cx = 110, cy = 110, capM = 1300;
+    const rr = Math.min(dist, capM) / capM * maxR;
+    const rad = toRad(brg);
+    const px = cx + rr * Math.sin(rad), py = cy - rr * Math.cos(rad);
+    const r500 = 500/capM*maxR, r1000 = 1000/capM*maxR;
+    return '<svg class="mini-map" viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+maxR+'" fill="var(--surface-soft)" stroke="var(--border)"/>' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r1000.toFixed(1)+'" fill="none" stroke="var(--border)" stroke-dasharray="3 3"/>' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="'+r500.toFixed(1)+'" fill="none" stroke="var(--border)" stroke-dasharray="3 3"/>' +
+      '<text x="'+cx+'" y="14" text-anchor="middle" class="mm-dir">N</text>' +
+      '<text x="206" y="'+(cy+4)+'" text-anchor="end" class="mm-dir">E</text>' +
+      '<text x="'+cx+'" y="212" text-anchor="middle" class="mm-dir">S</text>' +
+      '<text x="14" y="'+(cy+4)+'" text-anchor="start" class="mm-dir">W</text>' +
+      '<line x1="'+cx+'" y1="'+cy+'" x2="'+px.toFixed(1)+'" y2="'+py.toFixed(1)+'" stroke="var(--accent-warn)" stroke-width="1.5" stroke-dasharray="4 3"/>' +
+      '<circle cx="'+cx+'" cy="'+cy+'" r="5" fill="var(--primary)"/>' +
+      '<text x="'+cx+'" y="'+(cy-10)+'" text-anchor="middle" class="mm-label mm-hq">정부청사역</text>' +
+      '<circle cx="'+px.toFixed(1)+'" cy="'+py.toFixed(1)+'" r="5" fill="var(--accent-warn)"/>' +
+      '<text x="'+px.toFixed(1)+'" y="'+(py < cy ? py-10 : py+18).toFixed(1)+'" text-anchor="middle" class="mm-label">' + escapeHtml(pick.name.length > 10 ? pick.name.slice(0,9)+"…" : pick.name) + '</text>' +
+      '</svg>';
+  }
+
   function renderDiscoverFilters(){
     const row = document.getElementById("filterRow");
     const cats = ["all", ...Object.keys(CAT_LABELS)];
@@ -1091,11 +1246,31 @@
     const pick = pickPool[Math.floor(Math.random() * pickPool.length)];
     lastPickName = pick.name;
     const catLabel = CAT_LABELS[pick.cat] || "";
+
+    let metaLine = "";
+    if(pick.lat != null && pick.lng != null){
+      const dist = distanceMeters(HQ.lat, HQ.lng, pick.lat, pick.lng);
+      metaLine += '<span class="r-meta-item">📍 정부청사역에서 ' + formatDistance(dist) + '</span>';
+    }
+    metaLine += '<span class="r-meta-item">☎ ' + (pick.phone ? escapeHtml(pick.phone) : '전화번호 정보 없음') + '</span>';
+
+    currentPick = pick;
+    const hasCoord = (pick.lat != null && pick.lng != null);
+    const useNaver = hasCoord && naverReady && !naverFailed;
+    let mapHtml = "";
+    if(hasCoord){
+      mapHtml = '<div class="map-box" id="mapBox">' +
+        (useNaver ? '<div id="naverMap" class="naver-map"></div>' : buildMiniMap(pick)) +
+        '</div>';
+    }
     resultBox.innerHTML =
       '<a class="restaurant-card" href="' + mapSearchUrl(pick.name) + '" target="_blank" rel="noopener">' +
         '<span class="r-info"><span class="r-name">' + escapeHtml(pick.name) + '</span><span class="r-cat">' + catLabel + (pick.note ? ' · ' + escapeHtml(pick.note) : '') + '</span></span>' +
         '<span class="r-arrow">↗</span>' +
-      '</a>';
+      '</a>' +
+      '<div class="r-meta">' + metaLine + '</div>' +
+      mapHtml;
+    if(useNaver) renderNaverMap(pick);
     showToast(pick.name + " 어때요?");
   }
 
@@ -1722,6 +1897,7 @@
   }
 
   async function init(){
+    loadNaverMaps();
     migrateRename("이윤정", "김윤정");
     loadVisited();
     loadCustom();
